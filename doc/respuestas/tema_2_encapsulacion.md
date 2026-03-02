@@ -78,6 +78,12 @@ En el caso de las clases, solo las clases internas pueden ser `private`; las cla
 
 ### Respuesta
 
+En Java existen más de dos niveles de visibilidad además de `public` y `private`. El modificador `protected` permite que un miembro sea accesible desde la propia clase, desde clases del mismo paquete y desde clases derivadas (herencia), aunque se encuentren en paquetes distintos. Además, existe la visibilidad por defecto o package-private, que se aplica cuando no se especifica ningún modificador, permitiendo el acceso desde cualquier clase del mismo paquete pero no desde fuera de él.
+
+En otros lenguajes orientados a objetos también existen diferentes niveles de visibilidad, aunque con nombres y comportamientos ligeramente distintos. En C++, por ejemplo, se utilizan `public`, `private` y `protected` con significados similares a Java, pero sin la visibilidad package-private. En Python, la convención es utilizar un prefijo de subguión bajo para indicar que un atributo es privado por convención, aunque técnicamente no es forzado por el lenguaje.
+
+Esta flexibilidad en los niveles de visibilidad permite diseñar jerarquías de clases más sofisticadas, especialmente cuando se utilizan características avanzadas como la herencia.
+
 
 ## 8. Responde: Los miembros de instancia privados de un objeto están ocultos para (a) otras clases o (b) otras instancias, aunque sean de la misma clase. Pon un ejemplo añadiendo un método `calcularDistanciaAPunto(Punto otro)` y explica la respuesta.
 
@@ -101,6 +107,12 @@ En este caso, aunque `x` e `y` son privados, el método puede acceder a `otro.x`
 ## 9. ¿Qué son los métodos "getter" y "setter" en los lenguajes orientados a objetos?
 
 ### Respuesta
+
+Los métodos getter y setter son métodos de acceso que permiten consultar y modificar el valor de los atributos privados de una clase desde fuera de ella. Un getter es un método público que devuelve el valor de un atributo privado, permitiendo que otros objetos consulten el estado sin poder modificarlo directamente. Un setter es un método público que permite asignar un nuevo valor a un atributo privado desde fuera de la clase.
+
+Estos métodos son fundamentales en la encapsulación, ya que permiten mantener los atributos privados mientras se controla el acceso a través de métodos. Por ejemplo, en la clase `Punto` se podrían añadir getters para consultar `x` e `y`, y setters para modificarlos. De este modo, se puede agregar validación en los setters para garantizar que las coordenadas sean válidas.
+
+En Java, existe una convención de nombres para estos métodos: un getter para un atributo `x` se nombraría `getX()`, y un setter se nombraría `setX(double nuevoValor)`. Aunque los getters y setters añaden verbosidad al código, proporcionan una capa de protección y flexibilidad que justifica su uso en la mayoría de casos.
 
 
 ## 10. Cuando nos referimos a que la ocultación de información mejora la "seguridad" del programa, ¿nos referimos a que no pueda ser "hackeado"?
@@ -162,6 +174,16 @@ En este ejemplo, `maxX` y `maxY` son miembros de clase y se actualizan cada vez 
 
 ### Respuesta
 
+```java
+public static Punto crearPuntoRedondeado(double x, double y) {
+	return new Punto(Math.round(x), Math.round(y));
+}
+```
+
+Sí, se ha utilizado `static`. Un método factoría es un método estático que se encarga de crear y devolver instancias de la clase. En este caso, el método `crearPuntoRedondeado` es un método de clase (estático) que recibe dos coordenadas, las redondea al entero más cercano utilizando `Math.round()`, y devuelve un nuevo objeto `Punto` inicializado con esos valores redondeados.
+
+Los métodos factoría son útiles cuando se necesita implementar lógica especial en la creación de objetos, como validación, transformación de datos o la aplicación de patrones como Singleton. Al ser estáticos, pueden invocarse sin necesidad de crear previamente una instancia de la clase, facilitando su uso como alternativa a los constructores directos.
+
 
 ## 15. Cambia la implementación de `Punto`. En vez de dos `double`, emplea un array interno de dos posiciones, intentando no modificar la interfaz pública de la clase.
 
@@ -220,6 +242,12 @@ La decisión de incluir un setter debe basarse en los requisitos de diseño y en
 ## 19. ¿La clase `String` en Java es mutable o inmutable? ¿Qué ocurre al concatenar dos cadenas? ¿Qué debemos hacer si vamos a hacer una operación que implique concatenar muchas veces para construir paso a paso una cadena muy larga?
 
 ### Respuesta
+
+La clase `String` en Java es inmutable, lo que significa que una vez creada una cadena, su contenido no puede cambiar. Cuando se concatenan dos cadenas utilizando el operador `+`, no se modifica ninguna de las cadenas originales, sino que se crea una nueva cadena que contiene el resultado de la concatenación. Por ejemplo, `"Hola" + " mundo"` crea una nueva cadena sin modificar los originales.
+
+Cuando se realizan múltiples concatenaciones en un bucle o en una secuencia de operaciones, cada concatenación crea una nueva cadena y descarta la anterior. Esto puede ser ineficiente en términos de rendimiento y uso de memoria, especialmente si se realiza muchas veces. Para evitar este problema, se debe utilizar la clase `StringBuilder`, que es mutable y está diseñada específicamente para construir cadenas de forma eficiente.
+
+Un ejemplo de uso correcto sería utilizar `StringBuilder` en lugar de concatenaciones sucesivas con `+`. En lugar de hacer `resultado = resultado + cadena1 + cadena2`, es mejor crear un `StringBuilder`, utilizar el método `append()` varias veces, y finalmente llamar a `toString()` para obtener la cadena final. De esta forma, se evita la creación innecesaria de objetos intermediarios y se mejora significativamente el rendimiento.
 
 
 ## 20. En POO ¿Cómo se comparan objetos de una misma clase? ¿Por su contenido o por su identidad? ¿Qué es el método equals en Java? ¿Qué hace por defecto? ¿Cómo se deben comparar dos cadenas en Java? 
